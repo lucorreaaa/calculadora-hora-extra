@@ -147,10 +147,12 @@
       const valorExtra = valorHora * (1 + percentual);
       const totalExtras = valorExtra * horas;
 
-      resultado.innerHTML = 
+      resultado.innerHTML = `
         <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
         <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
         <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
+`;
+
       ;
       resultado.style.display = "block";
       resultado.classList.remove("fade");
