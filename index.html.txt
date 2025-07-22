@@ -193,10 +193,11 @@
       const total = valorHoraExtra * horas;
 
       resultadoEl.innerText =
-        💵 Valor da hora: R$ ${valorHora.toFixed(2)}\n +
-        ➕ Hora extra (${(adicional * 100).toFixed(0)}%): R$ ${valorHoraExtra.toFixed(2)}\n +
-        🧮 Total das horas extras: R$ ${total.toFixed(2)}\n\n +
-        📌 Fórmula: (Salário / Carga Horária) × (1 + % adicional);
+        `💵 Valor da hora: R$ ${valorHora.toFixed(2)}\n` +
+        `➕ Hora extra (${(adicional * 100).toFixed(0)}%): R$ ${valorHoraExtra.toFixed(2)}\n` +
+        `🧮 Total das horas extras: R$ ${total.toFixed(2)}\n\n` +
+        `📌 Fórmula: (Salário / Carga Horária) × (1 + % adicional)`;
+
 
       resultadoEl.style.display = 'block';
 
