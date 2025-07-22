@@ -1,159 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icons/icon-180.png" />
-  <title>Calculadora de Hora Extra</title>
-  <style>
-    :root {
-      --bg-color: #121212;
-      --text-color: #ffffff;
-      --card-bg: #1e1e1e;
-      --input-bg: #2c2c2c;
-      --border-radius: 12px;
-    }
-
-    body {
-      margin: 0;
-      padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px 16px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: Arial, sans-serif;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 4px;
-      border-radius: var(--border-radius);
-      border: none;
-      background-color: var(--input-bg);
-      color: var(--text-color);
-    }
-
-    button {
-      width: 100%;
-      margin-top: 16px;
-      padding: 12px;
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-    }
-
-    .resultado {
-      margin-top: 24px;
-      padding: 16px;
-      background-color: var(--card-bg);
-      border-radius: var(--border-radius);
-    }
-
-    .resultado p {
-      margin: 8px 0;
-    }
-
-    .fade {
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  </style>
-</head>
-<body>
-  <h1>Calculadora de Hora Extra</h1>
-
-  <label for="salario">💰 Salário Bruto (R$):</label>
-  <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
-
-  <label for="horas">⏰ Horas Extras Trabalhadas:</label>
-  <input type="number" id="horas" placeholder="Total de horas extras no mês.">
-
-  <label for="percentual">📈 Porcentagem da Hora Extra:</label>
-  <select id="percentual">
-    <option value="0.5">50%</option>
-    <option value="0.6" selected>60%</option>
-    <option value="1.0">100%</option>
-    <option value="2.0">200%</option>
-  </select>
-
-  <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
-  <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
-
-  <button onclick="calcular()">Calcular</button>
-  <button onclick="exemplo()">Preencher com exemplo</button>
-
-  <div class="resultado" id="resultado" style="display: none;"></div>
-
-  <script>
-    function calcular() {
-      const salario = parseFloat(document.getElementById('salario').value);
-      const horas = parseFloat(document.getElementById('horas').value);
-      const percentual = parseFloat(document.getElementById('percentual').value);
-      const carga = parseFloat(document.getElementById('carga').value);
-      const resultado = document.getElementById('resultado');
-
-      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga === 0) {
-        resultado.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
-        resultado.style.display = "block";
-        resultado.classList.add("fade");
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icon-180.png" />
+    <meta name="theme-color" content="#000000" />
+    <title>Calculadora de Hora Extra</title>
+    <style>
+      :root {
+        --bg: #121212;
+        --text: #ffffff;
+        --accent: #007bff;
+        --card: #1e1e1e;
+        --radius: 10px;
       }
 
-      const valorHora = salario / carga;
-      const valorExtra = valorHora * (1 + percentual);
-      const totalExtras = valorExtra * horas;
-
-      resultado.innerHTML = `
-        <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
-        <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
-        <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
-        <p>📌 Fórmula: (Salário / Carga Horária) × (1 + % adicional)</p>
-      `;
-      resultado.style.display = "block";
-      resultado.classList.remove("fade");
-      void resultado.offsetWidth; // reflow
-      resultado.classList.add("fade");
-
-      // Salvar no localStorage
-      localStorage.setItem("dados", JSON.stringify({ salario, horas, percentual, carga }));
-    }
-
-    function exemplo() {
-      document.getElementById('salario').value = 3000;
-      document.getElementById('horas').value = 10;
-      document.getElementById('percentual').value = 0.6;
-      document.getElementById('carga').value = 160;
-    }
-
-    // Carregar do localStorage
-    window.onload = function () {
-      const dados = JSON.parse(localStorage.getItem("dados"));
-      if (dados) {
-        document.getElementById('salario').value = dados.salario;
-        document.getElementById('horas').value = dados.horas;
-        document.getElementById('percentual').value = dados.percentual;
-        document.getElementById('carga').value = dados.carga;
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: calc(env(safe-area-inset-top) + 16px) 16px 16px;
       }
-    };
-  </script>
-</body>
+
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+      }
+
+      label {
+        display: block;
+        margin: 16px 0 4px;
+        font-weight: bold;
+      }
+
+      .input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: var(--radius);
+        margin-bottom: 8px;
+        box-sizing: border-box;
+      }
+
+      select.input {
+        appearance: none;
+        background-color: #fff;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        margin-top: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .resultado {
+        background-color: var(--card);
+        padding: 16px;
+        border-radius: var(--radius);
+        margin-top: 20px;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+
+      .resultado.show {
+        opacity: 1;
+      }
+
+      small {
+        color: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calculadora de Hora Extra</h1>
+
+    <label for="salario">💰 Salário Bruto (R$):</label>
+    <input type="number" id="salario" class="input" placeholder="Ex: 3000" />
+
+    <small>Informe seu salário bruto mensal.</small>
+
+    <label for="horas">⏰ Horas Extras Trabalhadas:</label>
+    <input type="number" id="horas" class="input" placeholder="Ex: 10" />
+    <small>Total de horas extras no mês.</small>
+
+    <label for="percentual">📈 Porcentagem da Hora Extra:</label>
+    <select id="percentual" class="input">
+      <option value="0.5">50%</option>
+      <option value="0.6" selected>60%</option>
+      <option value="1">100%</option>
+    </select>
+
+    <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
+    <input type="number" id="carga" class="input" placeholder="Ex: 160" />
+    <small>Geralmente 156h, 160h ou 220h mensais.</small>
+
+    <button onclick="calcular()">Calcular</button>
+    <button onclick="exemplo()">Preencher com exemplo</button>
+
+    <div id="resultado" class="resultado"></div>
+
+    <script>
+      function calcular() {
+        const salario = parseFloat(document.getElementById("salario").value);
+        const horas = parseFloat(document.getElementById("horas").value);
+        const percentual = parseFloat(document.getElementById("percentual").value);
+        const carga = parseFloat(document.getElementById("carga").value);
+
+        if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga)) {
+          alert("Preencha todos os campos corretamente.");
+          return;
+        }
+
+        const valorHora = salario / carga;
+        const valorExtra = valorHora * (1 + percentual);
+        const totalExtras = valorExtra * horas;
+
+        const resultado = document.getElementById("resultado");
+        resultado.innerHTML = `
+          🪙 <strong>Valor da hora:</strong> R$ ${valorHora.toFixed(2)}<br>
+          ➕ <strong>Hora extra (${(percentual * 100).toFixed(0)}%):</strong> R$ ${valorExtra.toFixed(2)}<br>
+          🧮 <strong>Total das horas extras:</strong> R$ ${totalExtras.toFixed(2)}<br><br>
+          📌 <strong>Fórmula:</strong> (Salário / Carga Horária) × (1 + % adicional)
+        `;
+        resultado.classList.add("show");
+
+        // Salvar dados no localStorage
+        localStorage.setItem("salario", salario);
+        localStorage.setItem("horas", horas);
+        localStorage.setItem("percentual", percentual);
+        localStorage.setItem("carga", carga);
+      }
+
+      function exemplo() {
+        document.getElementById("salario").value = 3000;
+        document.getElementById("horas").value = 10;
+        document.getElementById("percentual").value = 0.6;
+        document.getElementById("carga").value = 160;
+      }
+
+      window.onload = function () {
+        if (localStorage.getItem("salario")) {
+          document.getElementById("salario").value = localStorage.getItem("salario");
+          document.getElementById("horas").value = localStorage.getItem("horas");
+          document.getElementById("percentual").value = localStorage.getItem("percentual");
+          document.getElementById("carga").value = localStorage.getItem("carga");
+        }
+      };
+    </script>
+  </body>
 </html>
