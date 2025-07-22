@@ -24,28 +24,29 @@
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
+      position: relative;
     }
 
     .container {
       width: 100%;
       max-width: 420px;
-      position: relative;
     }
 
-    .theme-toggle {
+    #toggleTheme {
       position: absolute;
-      top: 0;
-      right: 0;
-      background: transparent;
+      top: calc(env(safe-area-inset-top, 0px) + 8px);
+      right: 16px;
+      background: none;
       border: none;
-      font-size: 1.5rem;
       color: var(--text-color);
+      font-size: 20px;
       cursor: pointer;
+      z-index: 1000;
     }
 
     h1 {
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       margin-bottom: 30px;
     }
 
@@ -108,19 +109,12 @@
       from { opacity: 0; transform: scale(0.98); }
       to { opacity: 1; transform: scale(1); }
     }
-
-    /* Tema claro */
-    body.light {
-      --bg-color: #f5f5f5;
-      --text-color: #222;
-      --card-bg: #ffffff;
-      --input-bg: #e0e0e0;
-    }
   </style>
 </head>
 <body>
+  <button id="toggleTheme" onclick="toggleTema()">🌓</button>
+
   <div class="container">
-    <button class="theme-toggle" onclick="alternarTema()" title="Alternar tema">🌙</button>
     <h1>Calculadora de Hora Extra</h1>
 
     <label for="salario">💰 Salário Bruto (R$):</label>
@@ -133,6 +127,9 @@
     <select id="percentual">
       <option value="0.5">50%</option>
       <option value="0.6" selected>60%</option>
+      <option value="0.7">70%</option>
+      <option value="0.8">80%</option>
+      <option value="0.9">90%</option>
       <option value="1.0">100%</option>
       <option value="2.0">200%</option>
     </select>
@@ -185,14 +182,19 @@
       document.getElementById('carga').value = 160;
     }
 
-    function alternarTema() {
-      const body = document.body;
-      const botao = document.querySelector(".theme-toggle");
-      body.classList.toggle("light");
-
-      const temaClaro = body.classList.contains("light");
-      botao.textContent = temaClaro ? "☀️" : "🌙";
-      localStorage.setItem("tema", temaClaro ? "claro" : "escuro");
+    function toggleTema() {
+      const root = document.documentElement;
+      if (root.style.getPropertyValue('--bg-color') === '#ffffff') {
+        root.style.setProperty('--bg-color', '#121212');
+        root.style.setProperty('--text-color', '#ffffff');
+        root.style.setProperty('--card-bg', '#1e1e1e');
+        root.style.setProperty('--input-bg', '#2c2c2c');
+      } else {
+        root.style.setProperty('--bg-color', '#ffffff');
+        root.style.setProperty('--text-color', '#000000');
+        root.style.setProperty('--card-bg', '#f0f0f0');
+        root.style.setProperty('--input-bg', '#e0e0e0');
+      }
     }
 
     window.onload = function () {
@@ -202,12 +204,6 @@
         document.getElementById('horas').value = dados.horas;
         document.getElementById('percentual').value = dados.percentual;
         document.getElementById('carga').value = dados.carga;
-      }
-
-      const tema = localStorage.getItem("tema");
-      if (tema === "claro") {
-        document.body.classList.add("light");
-        document.querySelector(".theme-toggle").textContent = "☀️";
       }
     };
   </script>
