@@ -8,12 +8,21 @@
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <title>Calculadora de Hora Extra</title>
   <style>
+    /* Tema escuro (padrão) */
     :root {
       --bg-color: #121212;
       --text-color: #ffffff;
       --card-bg: #1e1e1e;
       --input-bg: #2c2c2c;
       --border-radius: 12px;
+    }
+
+    /* Tema claro */
+    .light-theme {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --card-bg: #f2f2f2;
+      --input-bg: #e0e0e0;
     }
 
     body {
@@ -24,6 +33,7 @@
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
@@ -33,7 +43,7 @@
 
     h1 {
       text-align: center;
-      font-size: 1.5rem; 
+      font-size: 1.5rem;
       margin-bottom: 30px;
     }
 
@@ -129,6 +139,21 @@
   </div>
 
   <script>
+    // Aplica tema conforme o sistema
+    function aplicarTemaSistema() {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (isDark) {
+        document.body.classList.remove('light-theme');
+      } else {
+        document.body.classList.add('light-theme');
+      }
+    }
+
+    aplicarTemaSistema();
+
+    // Atualiza dinamicamente se o usuário mudar o tema do sistema
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', aplicarTemaSistema);
+
     function calcular() {
       const salario = parseFloat(document.getElementById('salario').value);
       const horas = parseFloat(document.getElementById('horas').value);
@@ -151,9 +176,8 @@
         <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
         <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
         <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
-`;
+      `;
 
-      ;
       resultado.style.display = "block";
       resultado.classList.remove("fade");
       void resultado.offsetWidth;
