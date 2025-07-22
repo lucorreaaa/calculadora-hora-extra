@@ -1,4 +1,4 @@
-const CACHE_NAME = "hora-extra-cache-v5";
+const CACHE_NAME = "hora-extra-cache-v6";
 const FILES_TO_CACHE = [
   "index.html",
   "manifest.json",
