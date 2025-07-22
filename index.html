@@ -29,11 +29,23 @@
     .container {
       width: 100%;
       max-width: 420px;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-color);
+      cursor: pointer;
     }
 
     h1 {
       text-align: center;
-      font-size: 1.5rem; /* diminuído */
+      font-size: 1.5rem;
       margin-bottom: 30px;
     }
 
@@ -54,7 +66,6 @@
       box-sizing: border-box;
     }
 
-    /* Ajuste para o select ficar visualmente igual ao input */
     select {
       appearance: none;
       -webkit-appearance: none;
@@ -97,10 +108,19 @@
       from { opacity: 0; transform: scale(0.98); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    /* Tema claro */
+    body.light {
+      --bg-color: #f5f5f5;
+      --text-color: #222;
+      --card-bg: #ffffff;
+      --input-bg: #e0e0e0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <button class="theme-toggle" onclick="alternarTema()" title="Alternar tema">🌙</button>
     <h1>Calculadora de Hora Extra</h1>
 
     <label for="salario">💰 Salário Bruto (R$):</label>
@@ -149,7 +169,6 @@
         <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
         <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
         <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
-        <p>📌 Fórmula: (Salário / Carga Horária) × (1 + % adicional)</p>
       `;
       resultado.style.display = "block";
       resultado.classList.remove("fade");
@@ -166,6 +185,16 @@
       document.getElementById('carga').value = 160;
     }
 
+    function alternarTema() {
+      const body = document.body;
+      const botao = document.querySelector(".theme-toggle");
+      body.classList.toggle("light");
+
+      const temaClaro = body.classList.contains("light");
+      botao.textContent = temaClaro ? "☀️" : "🌙";
+      localStorage.setItem("tema", temaClaro ? "claro" : "escuro");
+    }
+
     window.onload = function () {
       const dados = JSON.parse(localStorage.getItem("dados"));
       if (dados) {
@@ -173,6 +202,12 @@
         document.getElementById('horas').value = dados.horas;
         document.getElementById('percentual').value = dados.percentual;
         document.getElementById('carga').value = dados.carga;
+      }
+
+      const tema = localStorage.getItem("tema");
+      if (tema === "claro") {
+        document.body.classList.add("light");
+        document.querySelector(".theme-toggle").textContent = "☀️";
       }
     };
   </script>
