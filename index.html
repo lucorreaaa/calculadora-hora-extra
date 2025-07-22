@@ -8,7 +8,6 @@
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <title>Calculadora de Hora Extra</title>
   <style>
-    /* Tema escuro (padrão) */
     :root {
       --bg-color: #121212;
       --text-color: #ffffff;
@@ -17,7 +16,6 @@
       --border-radius: 12px;
     }
 
-    /* Tema claro */
     .light-theme {
       --bg-color: #ffffff;
       --text-color: #000000;
@@ -139,7 +137,6 @@
   </div>
 
   <script>
-    // Aplica tema conforme o sistema
     function aplicarTemaSistema() {
       const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (isDark) {
@@ -151,7 +148,6 @@
 
     aplicarTemaSistema();
 
-    // Atualiza dinamicamente se o usuário mudar o tema do sistema
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', aplicarTemaSistema);
 
     function calcular() {
