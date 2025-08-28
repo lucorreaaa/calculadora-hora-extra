@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hora-extra-v6';
+const CACHE_NAME = 'hora-extra-v10';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -61,3 +61,4 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
