@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#000000" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
-  <title>Calculadora</title>
+  <title>Calculadora de Hora Extra</title>
   <style>
     :root {
       --bg-color: #121212;
@@ -14,8 +14,6 @@
       --card-bg: #1e1e1e;
       --input-bg: #2c2c2c;
       --border-radius: 12px;
-      --btn-bg: #007bff;
-      --muted: #9ea3a9;
     }
 
     body {
@@ -28,170 +26,141 @@
       justify-content: center;
     }
 
-    .container { width: 100%; max-width: 420px; }
-    h1 { text-align: center; font-size: 1.5rem; margin: 0 0 18px; }
-
-    /* Tabs */
-    .tabs {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px;
+    .container {
+      width: 100%;
+      max-width: 420px;
     }
-    .tab-btn {
-      padding: 10px 12px; border-radius: 10px; border: 1px solid #2f2f2f;
-      background: #1a1a1a; color: var(--text-color); cursor: pointer; font-weight: 600;
-    }
-    .tab-btn.active { background: var(--btn-bg); border-color: var(--btn-bg); }
 
-    label { display: block; margin-top: 14px; font-weight: bold; }
-    .hint { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin: 28px 0 12px;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+    }
 
     input, select {
-      width: 100%; padding: 10px; margin-top: 4px; border-radius: var(--border-radius);
-      border: none; background-color: var(--input-bg); color: var(--text-color); box-sizing: border-box;
-    }
-    select {
-      appearance: none; -webkit-appearance: none; -moz-appearance: none; padding-right: 2.5rem;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-      background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem;
+      width: 100%;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: var(--border-radius);
+      border: none;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      box-sizing: border-box;
     }
 
-    .row { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    /* deixa o select visualmente igual ao input */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
+    }
 
     button {
-      width: 100%; padding: 12px; background-color: var(--btn-bg); color: white; font-weight: bold;
-      border: none; border-radius: 12px; cursor: pointer;
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
     }
 
-    .resultado { margin-top: 20px; padding: 16px; background-color: var(--card-bg); border-radius: var(--border-radius); }
+    .resultado {
+      margin-top: 24px;
+      padding: 16px;
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      display: none;
+    }
+
     .resultado p { margin: 8px 0; }
 
-    .fade { animation: fadeIn 0.35s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
+    .fade { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to   { opacity: 1; transform: scale(1); }
+    }
 
-    .section { display: none; }
-    .section.active { display: block; }
+    .hint { font-size: 12px; opacity: .8; margin: 6px 0 0; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Calculadora</h1>
+    <h1>Calculadora de Hora Extra</h1>
 
-    <!-- Abas -->
-    <div class="tabs">
-      <button id="tabHora" class="tab-btn active" onclick="mudarAba('hora')">Hora Extra</button>
-      <button id="tabFerias" class="tab-btn" onclick="mudarAba('ferias')">Férias</button>
-    </div>
+    <!-- Hora extra -->
+    <label for="salario">💰 Salário Bruto (R$):</label>
+    <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
 
-    <!-- Seção Hora Extra -->
-    <section id="secHora" class="section active">
-      <div class="row">
-        <div>
-          <label for="salario">💰 Salário Bruto (R$):</label>
-          <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
-        </div>
+    <label for="horas">⏰ Horas Extras Trabalhadas:</label>
+    <input type="number" id="horas" placeholder="Total de horas extras no mês.">
 
-        <div>
-          <label for="horas">⏰ Horas Extras Trabalhadas:</label>
-          <input type="number" id="horas" placeholder="Total de horas extras no mês.">
-        </div>
+    <label for="percentual">📈 Porcentagem da Hora Extra:</label>
+    <select id="percentual">
+      <option value="0.5">50%</option>
+      <option value="0.6" selected>60%</option>
+      <option value="0.7">70%</option>
+      <option value="0.8">80%</option>
+      <option value="0.9">90%</option>
+      <option value="1.0">100%</option>
+      <option value="2.0">200%</option>
+    </select>
 
-        <div>
-          <label for="percentual">📈 Porcentagem da Hora Extra:</label>
-          <select id="percentual">
-            <option value="0.5">50%</option>
-            <option value="0.6" selected>60%</option>
-            <option value="0.7">70%</option>
-            <option value="0.8">80%</option>
-            <option value="0.9">90%</option>
-            <option value="1.0">100%</option>
-            <option value="1.2">120%</option>
-            <option value="2.0">200%</option>
-          </select>
-        </div>
+    <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
+    <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
 
-        <div>
-          <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
-          <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
-          <p class="hint">Dica: 156 = 36h/semana · 4,33</p>
-        </div>
-      </div>
+    <button onclick="calcular()">Calcular</button>
+    <button onclick="exemplo()">Preencher com exemplo</button>
 
-      <div class="actions">
-        <button onclick="calcularHoraExtra()">Calcular</button>
-        <button onclick="exemploHora()">Exemplo</button>
-      </div>
+    <div class="resultado" id="resultado"></div>
 
-      <div class="resultado" id="resultadoHora" style="display: none;"></div>
-    </section>
+    <!-- Férias -->
+    <h2>🗓️ Cálculo de Férias</h2>
 
-    <!-- Seção Férias -->
-    <section id="secFerias" class="section">
-      <div class="row">
-        <div>
-          <label for="salarioFerias">💰 Salário Bruto (R$):</label>
-          <input type="number" id="salarioFerias" placeholder="Use o mesmo salário bruto mensal.">
-          <p class="hint">Se preferir, repita o salário aqui só para férias.</p>
-        </div>
+    <label for="diasGozo">Dias que vai tirar (20–30):</label>
+    <input type="number" id="diasGozo" min="20" max="30" value="30" />
 
-        <div>
-          <label for="diasFerias">📅 Dias de férias:</label>
-          <input type="number" id="diasFerias" min="1" max="30" placeholder="Ex.: 30" oninput="atualizarLimiteAbono()">
-          <p id="hintDias" class="hint">Cálculo proporcional caso informe menos de 30 dias.</p>
-        </div>
+    <label for="diasVender">Dias a vender (0–10):</label>
+    <select id="diasVender"></select>
+    <p id="hintVenda" class="hint">Você pode vender até 10 dia(s).</p>
 
-        <div>
-          <label for="diasAbono">💠 Dias a vender (abono):</label>
-          <input type="number" id="diasAbono" min="0" placeholder="Ex.: 10" oninput="limitarAbono()">
-          <p id="hintAbono" class="hint">Você pode vender até 1/3 dos dias de férias (máx. exibido aqui).</p>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button onclick="calcularFerias()">Calcular</button>
-        <button onclick="exemploFerias()">Exemplo</button>
-      </div>
-
-      <div class="resultado" id="resultadoFerias" style="display: none;"></div>
-    </section>
+    <button onclick="calcularFerias()">Calcular Férias</button>
+    <div class="resultado" id="resultadoFerias"></div>
   </div>
 
   <script>
-    // ---------- Tabs ----------
-    function mudarAba(qual) {
-      const secHora = document.getElementById('secHora');
-      const secFerias = document.getElementById('secFerias');
-      const tabHora = document.getElementById('tabHora');
-      const tabFerias = document.getElementById('tabFerias');
-
-      if (qual === 'hora') {
-        secHora.classList.add('active');
-        secFerias.classList.remove('active');
-        tabHora.classList.add('active');
-        tabFerias.classList.remove('active');
-        localStorage.setItem('aba', 'hora');
-      } else {
-        secFerias.classList.add('active');
-        secHora.classList.remove('active');
-        tabFerias.classList.add('active');
-        tabHora.classList.remove('active');
-        localStorage.setItem('aba', 'ferias');
-        // Atualiza limites quando chega na aba
-        atualizarLimiteAbono();
-      }
-    }
-
-    // ---------- Hora Extra ----------
-    function calcularHoraExtra() {
+    /* =========================
+       HORA EXTRA
+    ========================== */
+    function calcular() {
       const salario = parseFloat(document.getElementById('salario').value);
       const horas = parseFloat(document.getElementById('horas').value);
       const percentual = parseFloat(document.getElementById('percentual').value);
       const carga = parseFloat(document.getElementById('carga').value);
-      const out = document.getElementById('resultadoHora');
+      const resultado = document.getElementById('resultado');
 
-      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga <= 0) {
-        out.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
-        out.style.display = "block";
-        out.classList.add("fade");
+      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga === 0) {
+        resultado.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
+        resultado.style.display = "block";
+        resultado.classList.add("fade");
         return;
       }
 
@@ -199,145 +168,124 @@
       const valorExtra = valorHora * (1 + percentual);
       const totalExtras = valorExtra * horas;
 
-      out.innerHTML = `
+      resultado.innerHTML = `
         <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
         <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
         <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
       `;
-      out.style.display = "block";
-      out.classList.remove("fade");
-      void out.offsetWidth; // reflow
-      out.classList.add("fade");
+      resultado.style.display = "block";
+      resultado.classList.remove("fade");
+      void resultado.offsetWidth; // reflow para reiniciar animação
+      resultado.classList.add("fade");
 
-      localStorage.setItem("dadosHora", JSON.stringify({ salario, horas, percentual, carga }));
+      localStorage.setItem("dados", JSON.stringify({ salario, horas, percentual, carga }));
     }
 
-    function exemploHora() {
+    function exemplo() {
       document.getElementById('salario').value = 3000;
       document.getElementById('horas').value = 10;
       document.getElementById('percentual').value = 0.6;
-      document.getElementById('carga').value = 156;
-      calcularHoraExtra();
+      document.getElementById('carga').value = 160;
     }
 
-    // ---------- Férias ----------
-    function diasAbonoMaximos(diasFerias) {
-      // Regra: até 1/3 dos dias de férias
-      const max = Math.floor(diasFerias / 3);
-      return max < 0 ? 0 : max;
-    }
+    /* =========================
+       FÉRIAS – LIMITE VENDÁVEL
+    ========================== */
+    function inicializarFerias() {
+      const TOTAL_FERIAS = 30;
+      const MAX_VENDA_LEGAL = 10;
 
-    function atualizarLimiteAbono() {
-      const dias = parseFloat(document.getElementById('diasFerias').value);
-      const abonoInput = document.getElementById('diasAbono');
-      const hintAbono = document.getElementById('hintAbono');
+      const gozoEl   = document.getElementById('diasGozo');
+      const venderEl = document.getElementById('diasVender');
+      const hintEl   = document.getElementById('hintVenda');
 
-      if (isNaN(dias) || dias <= 0) {
-        abonoInput.value = '';
-        abonoInput.min = 0;
-        abonoInput.max = 0;
-        hintAbono.textContent = 'Informe os dias de férias para ver o limite de abono.';
-        return;
+      function numero(n) {
+        const v = Number(n);
+        return Number.isFinite(v) ? v : 0;
+        }
+
+      function limiteMaximoVendavel() {
+        const gozo = numero(gozoEl.value);
+        const sobra = Math.max(0, TOTAL_FERIAS - gozo);
+        return Math.min(MAX_VENDA_LEGAL, sobra);
       }
 
-      const max = diasAbonoMaximos(dias);
-      abonoInput.min = 0;
-      abonoInput.max = max;
-      if (abonoInput.value !== '' && parseFloat(abonoInput.value) > max) {
-        abonoInput.value = String(max);
+      function preencherSelectVender(maxVendavel) {
+        venderEl.innerHTML = '';
+        for (let i = 0; i <= maxVendavel; i++) {
+          const opt = document.createElement('option');
+          opt.value = String(i);
+          opt.textContent = String(i);
+          venderEl.appendChild(opt);
+        }
       }
-      hintAbono.textContent = `Você pode vender até ${max} dia(s) (${max > 0 ? '≈ 1/3 dos dias informados' : 'sem abono disponível'}).`;
+
+      function atualizarLimiteVenda() {
+        const maxVendavel = limiteMaximoVendavel();
+        preencherSelectVender(maxVendavel);
+        if (hintEl) hintEl.textContent = `Você pode vender até ${maxVendavel} dia(s).`;
+      }
+
+      gozoEl.addEventListener('input', atualizarLimiteVenda);
+      gozoEl.addEventListener('change', atualizarLimiteVenda);
+
+      atualizarLimiteVenda();
     }
 
-    function limitarAbono() {
-      const dias = parseFloat(document.getElementById('diasFerias').value);
-      const abonoInput = document.getElementById('diasAbono');
-      const max = isNaN(dias) ? 0 : diasAbonoMaximos(dias);
-
-      let val = parseFloat(abonoInput.value);
-      if (isNaN(val)) return;
-      if (val < 0) val = 0;
-      if (val > max) val = max;
-      abonoInput.value = String(val);
-    }
-
+    /* =========================
+       FÉRIAS – CÁLCULO
+       (valores aproximados CLT)
+    ========================== */
     function calcularFerias() {
-      const salario = parseFloat(document.getElementById('salarioFerias').value);
-      const dias = parseFloat(document.getElementById('diasFerias').value);
-      const diasAbono = parseFloat(document.getElementById('diasAbono').value || '0');
-      const out = document.getElementById('resultadoFerias');
+      const salario = parseFloat(document.getElementById('salario').value);
+      const diasGozo = parseFloat(document.getElementById('diasGozo').value);
+      const diasVender = parseFloat(document.getElementById('diasVender').value);
+      const res = document.getElementById('resultadoFerias');
 
-      if (isNaN(salario) || isNaN(dias) || dias <= 0 || dias > 30) {
-        out.innerHTML = "<p>⚠️ Preencha salário e dias (1 a 30) corretamente.</p>";
-        out.style.display = "block";
-        out.classList.add("fade");
+      if (isNaN(salario) || isNaN(diasGozo) || isNaN(diasVender) || diasGozo < 20 || diasGozo > 30) {
+        res.innerHTML = "<p>⚠️ Informe salário e dias de férias corretamente.</p>";
+        res.style.display = "block";
+        res.classList.add("fade");
         return;
       }
 
-      // Garante que o abono respeite o limite de 1/3
-      const maxAbono = diasAbonoMaximos(dias);
-      const abonoAjustado = Math.min(Math.max(0, Math.floor(diasAbono)), maxAbono);
+      // Cálculo básico:
+      // - Remuneração dos dias de gozo: (salário/30 * diasGozo) + 1/3 disso
+      // - Abono pecuniário (dias vendidos): (salário/30 * diasVender) + 1/3 disso
+      const valorDia = salario / 30;
+      const remunGozo = valorDia * diasGozo;
+      const adicionalGozo = remunGozo / 3;
 
-      // Base proporcional às férias gozadas
-      const baseFerias = salario * (dias / 30);
+      const abono = valorDia * diasVender;
+      const adicionalAbono = abono / 3;
 
-      // 1/3 constitucional sobre a base das férias
-      const adicionalUmTerco = baseFerias / 3;
+      const totalReceber = remunGozo + adicionalGozo + abono + adicionalAbono;
 
-      // Abono pecuniário: dias vendidos convertidos em dinheiro (salário * dias/30)
-      const valorAbono = salario * (abonoAjustado / 30);
-
-      const total = baseFerias + adicionalUmTerco + valorAbono;
-
-      out.innerHTML = `
-        <p>🗓️ Dias de férias: ${dias} ${abonoAjustado > 0 ? `(vendidos ${abonoAjustado} dia(s))` : ''}</p>
-        <p>💵 Base férias (proporcional): R$ ${baseFerias.toFixed(2)}</p>
-        <p>➕ Adicional 1/3 constitucional: R$ ${adicionalUmTerco.toFixed(2)}</p>
-        ${abonoAjustado > 0 ? `<p>💠 Abono (${abonoAjustado} dia(s) em dinheiro): R$ ${valorAbono.toFixed(2)}</p>` : ``}
-        <p><strong>Total a receber (bruto): R$ ${total.toFixed(2)}</strong></p>
-        <p class="hint">*Cálculo simplificado, sem descontos (INSS/IR) e sem médias de adicionais.</p>
+      res.innerHTML = `
+        <p>📅 Dias de gozo: ${diasGozo}</p>
+        <p>💵 Valor por dia: R$ ${valorDia.toFixed(2)}</p>
+        <p>🎯 Remuneração gozo: R$ ${remunGozo.toFixed(2)} (+ 1/3 = R$ ${adicionalGozo.toFixed(2)})</p>
+        <p>💸 Abono (dias vendidos ${diasVender}): R$ ${abono.toFixed(2)} (+ 1/3 = R$ ${adicionalAbono.toFixed(2)})</p>
+        <p><strong>🧾 Total a receber (aprox.): R$ ${totalReceber.toFixed(2)}</strong></p>
       `;
-      out.style.display = "block";
-      out.classList.remove("fade");
-      void out.offsetWidth; // reflow
-      out.classList.add("fade");
-
-      localStorage.setItem("dadosFerias", JSON.stringify({ salario, dias, diasAbono: abonoAjustado }));
+      res.style.display = "block";
+      res.classList.remove("fade");
+      void res.offsetWidth; // reflow para reiniciar animação
+      res.classList.add("fade");
     }
 
-    function exemploFerias() {
-      document.getElementById('salarioFerias').value = 3000;
-      document.getElementById('diasFerias').value = 30;
-      atualizarLimiteAbono();
-      document.getElementById('diasAbono').value = 10; // 1/3 de 30
-      calcularFerias();
-    }
-
-    // ---------- Carregar estado salvo ----------
+    /* =========================
+       ONLOAD – carregar dados e iniciar férias
+    ========================== */
     window.onload = function () {
-      // Aba
-      const aba = localStorage.getItem('aba');
-      if (aba === 'ferias') mudarAba('ferias');
-
-      // Hora extra
-      const dh = JSON.parse(localStorage.getItem("dadosHora") || "null");
-      if (dh) {
-        document.getElementById('salario').value = dh.salario;
-        document.getElementById('horas').value = dh.horas;
-        document.getElementById('percentual').value = dh.percentual;
-        document.getElementById('carga').value = dh.carga;
+      const dados = JSON.parse(localStorage.getItem("dados"));
+      if (dados) {
+        document.getElementById('salario').value = dados.salario ?? '';
+        document.getElementById('horas').value = dados.horas ?? '';
+        document.getElementById('percentual').value = dados.percentual ?? '0.6';
+        document.getElementById('carga').value = dados.carga ?? '';
       }
-
-      // Férias
-      const df = JSON.parse(localStorage.getItem("dadosFerias") || "null");
-      if (df) {
-        document.getElementById('salarioFerias').value = df.salario;
-        document.getElementById('diasFerias').value = df.dias;
-        atualizarLimiteAbono();
-        document.getElementById('diasAbono').value = df.diasAbono ?? 0;
-      } else {
-        atualizarLimiteAbono();
-      }
+      inicializarFerias();
     };
   </script>
 </body>
