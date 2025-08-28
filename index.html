@@ -14,13 +14,8 @@
       --card-bg: #1e1e1e;
       --input-bg: #2c2c2c;
       --border-radius: 12px;
-    }
-
-    .light-theme {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --card-bg: #f2f2f2;
-      --input-bg: #e0e0e0;
+      --btn-bg: #007bff;
+      --muted: #9ea3a9;
     }
 
     body {
@@ -31,7 +26,6 @@
       font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
-      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
@@ -42,13 +36,40 @@
     h1 {
       text-align: center;
       font-size: 1.5rem;
-      margin-bottom: 30px;
+      margin: 0 0 18px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .tab-btn {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #2f2f2f;
+      background: #1a1a1a;
+      color: var(--text-color);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab-btn.active {
+      background: var(--btn-bg);
+      border-color: var(--btn-bg);
     }
 
     label {
       display: block;
       margin-top: 14px;
       font-weight: bold;
+    }
+
+    .hint {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
     }
 
     input, select {
@@ -62,6 +83,7 @@
       box-sizing: border-box;
     }
 
+    /* Deixa o select com cara do input, inclusive a setinha */
     select {
       appearance: none;
       -webkit-appearance: none;
@@ -73,94 +95,169 @@
       background-size: 1rem;
     }
 
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
     button {
       width: 100%;
-      margin-top: 16px;
       padding: 12px;
-      background-color: #007bff;
+      background-color: var(--btn-bg);
       color: white;
       font-weight: bold;
       border: none;
-      border-radius: var(--border-radius);
+      border-radius: 12px;
       cursor: pointer;
     }
 
     .resultado {
-      margin-top: 24px;
+      margin-top: 20px;
       padding: 16px;
       background-color: var(--card-bg);
       border-radius: var(--border-radius);
     }
+    .resultado p { margin: 8px 0; }
 
-    .resultado p {
-      margin: 8px 0;
-    }
-
-    .fade {
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
+    .fade { animation: fadeIn 0.35s ease-in-out; }
     @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(0.985); }
+      to   { opacity: 1; transform: scale(1); }
     }
+
+    /* Esconde seções não ativas */
+    .section { display: none; }
+    .section.active { display: block; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Calculadora de Hora Extra</h1>
+    <h1>Calculadora</h1>
 
-    <label for="salario">💰 Salário Bruto (R$):</label>
-    <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
+    <!-- Abas -->
+    <div class="tabs">
+      <button id="tabHora" class="tab-btn active" onclick="mudarAba('hora')">Hora Extra</button>
+      <button id="tabFerias" class="tab-btn" onclick="mudarAba('ferias')">Férias</button>
+    </div>
 
-    <label for="horas">⏰ Horas Extras Trabalhadas:</label>
-    <input type="number" id="horas" placeholder="Total de horas extras no mês.">
+    <!-- Seção Hora Extra -->
+    <section id="secHora" class="section active">
+      <div class="row">
+        <div>
+          <label for="salario">💰 Salário Bruto (R$):</label>
+          <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
+        </div>
 
-    <label for="percentual">📈 Porcentagem da Hora Extra:</label>
-    <select id="percentual">
-      <option value="0.5">50%</option>
-      <option value="0.6" selected>60%</option>
-      <option value="0.7">70%</option>
-      <option value="0.8">80%</option>
-      <option value="0.9">90%</option>
-      <option value="1.0">100%</option>
-      <option value="2.0">200%</option>
-    </select>
+        <div>
+          <label for="horas">⏰ Horas Extras Trabalhadas:</label>
+          <input type="number" id="horas" placeholder="Total de horas extras no mês.">
+        </div>
 
-    <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
-    <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
+        <div>
+          <label for="percentual">📈 Porcentagem da Hora Extra:</label>
+          <select id="percentual">
+            <option value="0.5">50%</option>
+            <option value="0.6" selected>60%</option>
+            <option value="0.7">70%</option>
+            <option value="0.8">80%</option>
+            <option value="0.9">90%</option>
+            <option value="1.0">100%</option>
+            <option value="1.2">120%</option>
+            <option value="2.0">200%</option>
+          </select>
+        </div>
 
-    <button onclick="calcular()">Calcular</button>
-    <button onclick="exemplo()">Preencher com exemplo</button>
+        <div>
+          <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
+          <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
+          <p class="hint">Dica: 156 = 36h/semana · 4,33</p>
+        </div>
+      </div>
 
-    <div class="resultado" id="resultado" style="display: none;"></div>
+      <div class="actions">
+        <button onclick="calcularHoraExtra()">Calcular</button>
+        <button onclick="exemploHora()">Exemplo</button>
+      </div>
+
+      <div class="resultado" id="resultadoHora" style="display: none;"></div>
+    </section>
+
+    <!-- Seção Férias -->
+    <section id="secFerias" class="section">
+      <div class="row">
+        <div>
+          <label for="salarioFerias">💰 Salário Bruto (R$):</label>
+          <input type="number" id="salarioFerias" placeholder="Use o mesmo salário bruto mensal.">
+          <p class="hint">Se preferir, repita o salário aqui só para férias.</p>
+        </div>
+
+        <div>
+          <label for="diasFerias">📅 Dias de férias:</label>
+          <input type="number" id="diasFerias" min="1" max="30" placeholder="Ex.: 30">
+          <p class="hint">Cálculo proporcional caso informe menos de 30 dias.</p>
+        </div>
+
+        <div>
+          <label>
+            <input type="checkbox" id="abonoCheck" style="transform: translateY(1px);" />
+            Vender 1/3 das férias (abono)
+          </label>
+          <p class="hint">Abono = converter 1/3 dos dias em dinheiro (máx. 10 dias quando 30 dias).</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button onclick="calcularFerias()">Calcular</button>
+        <button onclick="exemploFerias()">Exemplo</button>
+      </div>
+
+      <div class="resultado" id="resultadoFerias" style="display: none;"></div>
+    </section>
   </div>
 
   <script>
-    function aplicarTemaSistema() {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (isDark) {
-        document.body.classList.remove('light-theme');
+    // ---------- Tabs ----------
+    function mudarAba(qual) {
+      const secHora = document.getElementById('secHora');
+      const secFerias = document.getElementById('secFerias');
+      const tabHora = document.getElementById('tabHora');
+      const tabFerias = document.getElementById('tabFerias');
+
+      if (qual === 'hora') {
+        secHora.classList.add('active');
+        secFerias.classList.remove('active');
+        tabHora.classList.add('active');
+        tabFerias.classList.remove('active');
+        localStorage.setItem('aba', 'hora');
       } else {
-        document.body.classList.add('light-theme');
+        secFerias.classList.add('active');
+        secHora.classList.remove('active');
+        tabFerias.classList.add('active');
+        tabHora.classList.remove('active');
+        localStorage.setItem('aba', 'ferias');
       }
     }
 
-    aplicarTemaSistema();
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', aplicarTemaSistema);
-
-    function calcular() {
+    // ---------- Hora Extra ----------
+    function calcularHoraExtra() {
       const salario = parseFloat(document.getElementById('salario').value);
       const horas = parseFloat(document.getElementById('horas').value);
       const percentual = parseFloat(document.getElementById('percentual').value);
       const carga = parseFloat(document.getElementById('carga').value);
-      const resultado = document.getElementById('resultado');
+      const out = document.getElementById('resultadoHora');
 
-      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga === 0) {
-        resultado.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
-        resultado.style.display = "block";
-        resultado.classList.add("fade");
+      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga <= 0) {
+        out.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
+        out.style.display = "block";
+        out.classList.add("fade");
         return;
       }
 
@@ -168,34 +265,99 @@
       const valorExtra = valorHora * (1 + percentual);
       const totalExtras = valorExtra * horas;
 
-      resultado.innerHTML = `
+      out.innerHTML = `
         <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
         <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
         <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
       `;
+      out.style.display = "block";
+      out.classList.remove("fade");
+      void out.offsetWidth; // reflow
+      out.classList.add("fade");
 
-      resultado.style.display = "block";
-      resultado.classList.remove("fade");
-      void resultado.offsetWidth;
-      resultado.classList.add("fade");
-
-      localStorage.setItem("dados", JSON.stringify({ salario, horas, percentual, carga }));
+      localStorage.setItem("dadosHora", JSON.stringify({ salario, horas, percentual, carga }));
     }
 
-    function exemplo() {
+    function exemploHora() {
       document.getElementById('salario').value = 3000;
       document.getElementById('horas').value = 10;
       document.getElementById('percentual').value = 0.6;
-      document.getElementById('carga').value = 160;
+      document.getElementById('carga').value = 156;
+      calcularHoraExtra();
     }
 
+    // ---------- Férias ----------
+    function calcularFerias() {
+      const salario = parseFloat(document.getElementById('salarioFerias').value);
+      const dias = parseFloat(document.getElementById('diasFerias').value);
+      const venderAbono = document.getElementById('abonoCheck').checked;
+      const out = document.getElementById('resultadoFerias');
+
+      if (isNaN(salario) || isNaN(dias) || dias <= 0 || dias > 30) {
+        out.innerHTML = "<p>⚠️ Preencha salário e dias (1 a 30) corretamente.</p>";
+        out.style.display = "block";
+        out.classList.add("fade");
+        return;
+      }
+
+      // Base proporcional às férias gozadas
+      const baseFerias = salario * (dias / 30);
+
+      // 1/3 constitucional sobre a base das férias
+      const adicionalUmTerco = baseFerias / 3;
+
+      // Abono pecuniário: 1/3 dos dias (até 10 quando 30 dias)
+      let diasAbono = Math.floor(dias / 3);
+      if (diasAbono > 10) diasAbono = 10; // limite prático quando 30 dias
+
+      const valorAbono = venderAbono ? salario * (diasAbono / 30) : 0;
+
+      const total = baseFerias + adicionalUmTerco + valorAbono;
+
+      out.innerHTML = `
+        <p>🗓️ Dias de férias: ${dias} ${venderAbono ? `(com abono de ${diasAbono} dia(s))` : ''}</p>
+        <p>💵 Base férias (proporcional): R$ ${baseFerias.toFixed(2)}</p>
+        <p>➕ Adicional 1/3 constitucional: R$ ${adicionalUmTerco.toFixed(2)}</p>
+        ${venderAbono ? `<p>💠 Abono (1/3 dos dias em dinheiro): R$ ${valorAbono.toFixed(2)}</p>` : ``}
+        <p><strong>Total a receber (bruto): R$ ${total.toFixed(2)}</strong></p>
+        <p class="hint">*Cálculo simplificado, sem descontos (INSS/IR) e sem médias de adicionais.</p>
+      `;
+      out.style.display = "block";
+      out.classList.remove("fade");
+      void out.offsetWidth; // reflow
+      out.classList.add("fade");
+
+      localStorage.setItem("dadosFerias", JSON.stringify({ salario, dias, venderAbono }));
+    }
+
+    function exemploFerias() {
+      document.getElementById('salarioFerias').value = 3000;
+      document.getElementById('diasFerias').value = 30;
+      document.getElementById('abonoCheck').checked = true;
+      calcularFerias();
+    }
+
+    // ---------- Carregar estado salvo ----------
     window.onload = function () {
-      const dados = JSON.parse(localStorage.getItem("dados"));
-      if (dados) {
-        document.getElementById('salario').value = dados.salario;
-        document.getElementById('horas').value = dados.horas;
-        document.getElementById('percentual').value = dados.percentual;
-        document.getElementById('carga').value = dados.carga;
+      // Aba
+      const aba = localStorage.getItem('aba');
+      if (aba === 'ferias') mudarAba('ferias');
+
+      // Hora extra
+      const dh = JSON.parse(localStorage.getItem("dadosHora") || "null");
+      if (dh) {
+        document.getElementById('salario').value = dh.salario;
+        document.getElementById('horas').value = dh.horas;
+        document.getElementById('percentual').value = dh.percentual;
+        document.getElementById('carga').value = dh.carga;
+      }
+
+      // Férias
+      const df = JSON.parse(localStorage.getItem("dadosFerias") || "null");
+      if (df) {
+        document.getElementById('salarioFerias').value = df.salario;
+        document.getElementById('diasFerias').value = df.dias;
+        document.getElementById('abonoCheck').checked = !!df.venderAbono;
       }
     };
   </script>
