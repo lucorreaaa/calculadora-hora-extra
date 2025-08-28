@@ -168,12 +168,15 @@
 
     <!-- Seção: Férias -->
     <section id="ferias" class="section">
-      <label for="diasGozo">📆 Dias que vai tirar (20–30):</label>
-      <input type="number" id="diasGozo" min="20" max="30" value="30" />
+      <label for="salarioFerias">💰 Salário Bruto (R$):</label>
+      <input type="number" id="salarioFerias" placeholder="Informe seu salário bruto (para férias).">
 
-      <label for="diasVender">🛒 Dias a vender (0–10):</label>
+      <label for="diasGozo">📆 Dias que vai tirar (1–30):</label>
+      <input type="number" id="diasGozo" min="1" max="30" value="30" />
+
+      <label for="diasVender">🛒 Dias a vender (até 10, se houver dias restantes):</label>
       <select id="diasVender"></select>
-      <p id="hintVenda" class="hint">Você pode vender até 10 dia(s).</p>
+      <p id="hintVenda" class="hint">Você pode vender até 10 dia(s), limitado pelo que sobrar de 30.</p>
 
       <button class="action" onclick="calcularFerias()">Calcular Férias</button>
       <div class="resultado" id="resultadoFerias"></div>
@@ -246,18 +249,19 @@
       const venderEl = document.getElementById('diasVender');
       const hintEl   = document.getElementById('hintVenda');
 
-      function numero(n) {
+      const toNumber = (n) => {
         const v = Number(n);
         return Number.isFinite(v) ? v : 0;
-      }
+        };
 
       function limiteMaximoVendavel() {
-        const gozo = numero(gozoEl.value);
-        const sobra = Math.max(0, TOTAL_FERIAS - gozo);
+        const gozo = toNumber(gozoEl.value);
+        const sobra = Math.max(0, TOTAL_FERIAS - gozo); // dias que sobraram dos 30
         return Math.min(MAX_VENDA_LEGAL, sobra);
       }
 
       function preencherSelectVender(maxVendavel) {
+        const selected = Number(venderEl.value || 0);
         venderEl.innerHTML = '';
         for (let i = 0; i <= maxVendavel; i++) {
           const opt = document.createElement('option');
@@ -265,12 +269,22 @@
           opt.textContent = String(i);
           venderEl.appendChild(opt);
         }
+        // mantém seleção se possível, senão ajusta para o máximo
+        const novoSelecionado = Math.min(selected, maxVendavel);
+        venderEl.value = String(novoSelecionado);
       }
 
       function atualizarLimiteVenda() {
+        // Clampa o valor de gozo para 1..30 visualmente, caso o usuário apague
+        if (gozoEl.value !== '') {
+          const v = Math.max(1, Math.min(30, toNumber(gozoEl.value)));
+          gozoEl.value = String(v);
+        }
         const maxVendavel = limiteMaximoVendavel();
         preencherSelectVender(maxVendavel);
-        if (hintEl) hintEl.textContent = `Você pode vender até ${maxVendavel} dia(s).`;
+        if (hintEl) {
+          hintEl.textContent = `Você pode vender até ${maxVendavel} dia(s) (de ${TOTAL_FERIAS - toNumber(gozoEl.value)} disponíveis, limite legal de ${MAX_VENDA_LEGAL}).`;
+        }
       }
 
       gozoEl.addEventListener('input', atualizarLimiteVenda);
@@ -279,41 +293,52 @@
     }
 
     function calcularFerias() {
-      const salario = parseFloat(document.getElementById('salario').value);
+      const salarioFerias = parseFloat(document.getElementById('salarioFerias').value);
+      const salarioHoraExtra = parseFloat(document.getElementById('salario').value);
+      const salarioBase = !isNaN(salarioFerias) ? salarioFerias : salarioHoraExtra;
+
       const diasGozo = parseFloat(document.getElementById('diasGozo').value);
       const diasVender = parseFloat(document.getElementById('diasVender').value);
       const res = document.getElementById('resultadoFerias');
 
-      if (isNaN(salario) || isNaN(diasGozo) || isNaN(diasVender) || diasGozo < 20 || diasGozo > 30) {
-        res.innerHTML = "<p>⚠️ Informe salário e dias de férias corretamente.</p>";
+      // validações: salário válido e dias na faixa 1..30
+      if (isNaN(salarioBase) || isNaN(diasGozo) || isNaN(diasVender) || diasGozo < 1 || diasGozo > 30) {
+        res.innerHTML = "<p>⚠️ Informe salário e dias de férias corretamente (gozo entre 1 e 30).</p>";
         res.style.display = "block";
         res.classList.add("fade");
         return;
       }
 
-      // Cálculo aproximado:
-      // - Remuneração dos dias de gozo + 1/3
-      // - Abono pecuniário dos dias vendidos + 1/3
-      const valorDia = salario / 30;
+      // Recalcula limites para garantir consistência
+      const TOTAL_FERIAS = 30;
+      const MAX_VENDA_LEGAL = 10;
+      const sobra = Math.max(0, TOTAL_FERIAS - diasGozo);
+      const maxVendavel = Math.min(MAX_VENDA_LEGAL, sobra);
+      const diasVendidosClamped = Math.max(0, Math.min(diasVender, maxVendavel));
+
+      const valorDia = salarioBase / 30;
       const remunGozo = valorDia * diasGozo;
       const adicionalGozo = remunGozo / 3;
 
-      const abono = valorDia * diasVender;
+      const abono = valorDia * diasVendidosClamped;
       const adicionalAbono = abono / 3;
 
       const totalReceber = remunGozo + adicionalGozo + abono + adicionalAbono;
 
       res.innerHTML = `
         <p>📅 Dias de gozo: ${diasGozo}</p>
+        <p>🛒 Dias vendidos: ${diasVendidosClamped} (máx. ${maxVendavel})</p>
         <p>💵 Valor por dia: R$ ${valorDia.toFixed(2)}</p>
         <p>🎯 Remuneração gozo: R$ ${remunGozo.toFixed(2)} (+ 1/3 = R$ ${adicionalGozo.toFixed(2)})</p>
-        <p>💸 Abono (dias vendidos ${diasVender}): R$ ${abono.toFixed(2)} (+ 1/3 = R$ ${adicionalAbono.toFixed(2)})</p>
+        <p>💸 Abono (venda): R$ ${abono.toFixed(2)} (+ 1/3 = R$ ${adicionalAbono.toFixed(2)})</p>
         <p><strong>🧾 Total a receber (aprox.): R$ ${totalReceber.toFixed(2)}</strong></p>
       `;
       res.style.display = "block";
       res.classList.remove("fade");
       void res.offsetWidth;
       res.classList.add("fade");
+
+      localStorage.setItem("salarioFerias", String(salarioBase));
     }
 
     /* ============ Onload ============ */
@@ -326,7 +351,14 @@
         document.getElementById('percentual').value = dados.percentual ?? '0.6';
         document.getElementById('carga').value = dados.carga ?? '';
       }
-      // Inicializa lógica das férias
+
+      // Restaura salário de férias (se houver)
+      const salFerias = localStorage.getItem("salarioFerias");
+      if (salFerias) {
+        document.getElementById('salarioFerias').value = salFerias;
+      }
+
+      // Inicializa lógica das férias (limites de venda dinâmicos)
       inicializarFerias();
     };
   </script>
