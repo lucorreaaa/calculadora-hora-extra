@@ -326,10 +326,10 @@
       const totalReceber = remunGozo + adicionalGozo + abono + adicionalAbono;
 
       res.innerHTML = `
-        <p>📅 Dias de gozo: ${diasGozo}</p>
+        <p>📅 Dias de ferias: ${diasGozo}</p>
         <p>🛒 Dias vendidos: ${diasVendidosClamped} (máx. ${maxVendavel})</p>
         <p>💵 Valor por dia: R$ ${valorDia.toFixed(2)}</p>
-        <p>🎯 Remuneração gozo: R$ ${remunGozo.toFixed(2)} (+ 1/3 = R$ ${adicionalGozo.toFixed(2)})</p>
+        <p>🎯 Remuneração ferias: R$ ${remunGozo.toFixed(2)} (+ 1/3 = R$ ${adicionalGozo.toFixed(2)})</p>
         <p>💸 Abono (venda): R$ ${abono.toFixed(2)} (+ 1/3 = R$ ${adicionalAbono.toFixed(2)})</p>
         <p><strong>🧾 Total a receber (aprox.): R$ ${totalReceber.toFixed(2)}</strong></p>
       `;
@@ -364,3 +364,4 @@
   </script>
 </body>
 </html>
+
